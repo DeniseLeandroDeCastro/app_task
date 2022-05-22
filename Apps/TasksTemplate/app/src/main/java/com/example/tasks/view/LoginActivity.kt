@@ -53,7 +53,9 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
     /**
      * Observa ViewModel
      */
-    private fun observe() {}
+    private fun observe() {
+
+    }
 
     /**
      * Autentica usuário
