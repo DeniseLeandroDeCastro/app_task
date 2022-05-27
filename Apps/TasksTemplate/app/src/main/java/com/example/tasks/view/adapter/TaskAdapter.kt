@@ -30,5 +30,4 @@ class TaskAdapter : RecyclerView.Adapter<TaskViewHolder>() {
     fun attachListener(listener: TaskListener) {
         mListener = listener
     }
-
 }

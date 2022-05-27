@@ -22,5 +22,4 @@ class SecurityPreferences(context: Context) {
     fun get(key: String): String {
         return mPreferences.getString(key, "") ?: ""
     }
-
 }

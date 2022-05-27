@@ -40,7 +40,5 @@ class TaskViewHolder(itemView: View, val listener: TaskListener) :
                 .show()
             true
         }
-
     }
-
 }
