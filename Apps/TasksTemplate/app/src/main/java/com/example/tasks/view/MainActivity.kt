@@ -69,5 +69,4 @@ class MainActivity : AppCompatActivity() {
     private fun observe() {
 
     }
-
 }

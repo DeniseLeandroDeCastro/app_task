@@ -16,15 +16,13 @@ class PriorityRepository(context: Context) {
     private val mPriorityDatabase = TaskDatabase.getDatabase(context).priorityDAO()
 
     fun all() {
-        val call: Call<List<PriorityModel>> = mRemote.list()
+        val call: Call<List<PriorityModel>> = mRemote.all()
         call.enqueue(object: Callback<List<PriorityModel>> {
             override fun onFailure(call: Call<List<PriorityModel>>, t: Throwable) {
-
             }
 
             override fun onResponse(call: Call<List<PriorityModel>>,
-                 response: Response<List<PriorityModel>>
-            ) {
+                 response: Response<List<PriorityModel>>) {
                 if (response.code() == TaskConstants.HTTP.SUCCESS) {
                     mPriorityDatabase.clear()
                     response.body()?.let { mPriorityDatabase.save(it) }
@@ -32,4 +30,6 @@ class PriorityRepository(context: Context) {
             }
         })
     }
+
+    fun list() = mPriorityDatabase.list()
 }
