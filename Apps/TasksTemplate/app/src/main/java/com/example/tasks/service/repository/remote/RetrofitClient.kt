@@ -18,19 +18,17 @@ class RetrofitClient private constructor() {
 
         private fun getRetrofitInstance() : Retrofit {
             val httpClient = OkHttpClient.Builder()
-
-//                httpClient.addInterceptor(object: Interceptor {
-//                    override fun intercept(chain: Interceptor.Chain): Response {
-//                        val request =
-//                            chain.request()
-//                                .newBuilder()
-//                                .addHeader(TaskConstants.HEADER.PERSON_KEY, personKey)
-//                                .addHeader(TaskConstants.HEADER.TOKEN_KEY, tokenKey)
-//                                .build()
-//                        return chain.proceed(request)
-//                    }
-//                })
-
+                httpClient.addInterceptor(object: Interceptor {
+                    override fun intercept(chain: Interceptor.Chain): Response {
+                        val request =
+                            chain.request()
+                                .newBuilder()
+                                .addHeader(TaskConstants.HEADER.PERSON_KEY, personKey)
+                                .addHeader(TaskConstants.HEADER.TOKEN_KEY, tokenKey)
+                                .build()
+                        return chain.proceed(request)
+                    }
+                })
             if (!Companion::retrofit.isInitialized) {
                 retrofit = Retrofit.Builder()
                     .baseUrl(baseurl)
