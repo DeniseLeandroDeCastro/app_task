@@ -8,6 +8,7 @@ import com.example.tasks.service.model.HeaderModel
 import com.example.tasks.service.constants.TaskConstants
 import com.example.tasks.service.listener.APIListener
 import com.example.tasks.service.listener.ValidationListener
+import com.example.tasks.service.model.PriorityModel
 import com.example.tasks.service.repository.PersonRepository
 import com.example.tasks.service.repository.PriorityRepository
 import com.example.tasks.service.repository.local.SecurityPreferences
@@ -51,7 +52,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
      * Verifica se usuário está logado
      */
     fun verifyLoggedUser() {
-
         val token = mSharedPreferences.get(TaskConstants.SHARED.TOKEN_KEY)
         val person = mSharedPreferences.get(TaskConstants.SHARED.PERSON_KEY)
 
@@ -60,7 +60,15 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         val logged = (token != "" && person != "")
 
         if (!logged) {
-            mPriorityRepository.all()
+            mPriorityRepository.all(object : APIListener<List<PriorityModel>> {
+                override fun onSuccess(model: List<PriorityModel>) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onFailure(str: String) {
+                    TODO("Not yet implemented")
+                }
+            })
         }
         mLoggedUser.value = logged
     }

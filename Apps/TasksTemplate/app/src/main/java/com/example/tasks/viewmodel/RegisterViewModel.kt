@@ -32,8 +32,6 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
             override fun onFailure(str: String) {
                 mCreate.value = ValidationListener(str)
             }
-
         })
     }
-
 }

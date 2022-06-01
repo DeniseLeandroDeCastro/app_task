@@ -2,6 +2,7 @@ package com.example.tasks.service.repository
 
 import android.content.Context
 import com.example.tasks.service.constants.TaskConstants
+import com.example.tasks.service.listener.APIListener
 import com.example.tasks.service.model.PriorityModel
 import com.example.tasks.service.repository.local.TaskDatabase
 import com.example.tasks.service.repository.remote.PriorityService
@@ -15,7 +16,7 @@ class PriorityRepository(context: Context) {
     private val mRemote = RetrofitClient.createService(PriorityService::class.java)
     private val mPriorityDatabase = TaskDatabase.getDatabase(context).priorityDAO()
 
-    fun all() {
+    fun all(listener: APIListener<List<PriorityModel>>) {
         val call: Call<List<PriorityModel>> = mRemote.all()
         call.enqueue(object: Callback<List<PriorityModel>> {
             override fun onFailure(call: Call<List<PriorityModel>>, t: Throwable) {
@@ -32,4 +33,6 @@ class PriorityRepository(context: Context) {
     }
 
     fun list() = mPriorityDatabase.list()
+
+    fun getDescription(id: Int) = mPriorityDatabase.getDescription(id)
 }

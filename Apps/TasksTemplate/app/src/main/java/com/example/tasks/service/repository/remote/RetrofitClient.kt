@@ -29,6 +29,7 @@ class RetrofitClient private constructor() {
                         return chain.proceed(request)
                     }
                 })
+
             if (!Companion::retrofit.isInitialized) {
                 retrofit = Retrofit.Builder()
                     .baseUrl(baseurl)

@@ -13,7 +13,7 @@
         <entry key="app/src/main/res/layout/fragment_expired_tasks.xml" value="0.35833333333333334" />
         <entry key="app/src/main/res/layout/fragment_next_tasks.xml" value="0.35833333333333334" />
         <entry key="app/src/main/res/layout/nav_header_main.xml" value="0.35833333333333334" />
-        <entry key="app/src/main/res/layout/row_task_list.xml" value="0.35833333333333334" />
+        <entry key="app/src/main/res/layout/row_task_list.xml" value="0.1" />
       </map>
     </option>
   </component>
