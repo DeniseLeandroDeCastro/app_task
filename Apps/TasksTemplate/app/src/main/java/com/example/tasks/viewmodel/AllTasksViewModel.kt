@@ -15,6 +15,9 @@ class AllTasksViewModel(application: Application) : AndroidViewModel(application
 
     private val mTaskRepository = TaskRepository(application)
 
+    private val mValidation = MutableLiveData<ValidationListener>()
+    var validation: LiveData<ValidationListener> = mValidation
+
     private val mList = MutableLiveData<List<TaskModel>>()
     var tasks: LiveData<List<TaskModel>> = mList
 
@@ -23,9 +26,37 @@ class AllTasksViewModel(application: Application) : AndroidViewModel(application
             override fun onSuccess(model: List<TaskModel>) {
                 mList.value = model
             }
-
             override fun onFailure(str: String) {
                 mList.value = arrayListOf()
+            }
+        })
+    }
+    fun delete(id: Int) {
+        mTaskRepository.delete(id, object: APIListener<Boolean> {
+            override fun onSuccess(model: Boolean) {
+                list()
+                mValidation.value = ValidationListener()
+            }
+            override fun onFailure(str: String) {
+                mValidation.value = ValidationListener(str)
+            }
+        })
+    }
+
+    fun complete(id: Int) {
+        updateStatus(id, true)
+    }
+
+    fun undo(id: Int) {
+       updateStatus(id, false)
+    }
+
+    private fun updateStatus(id: Int, complete: Boolean) {
+        mTaskRepository.updateStatus(id, complete, object: APIListener<Boolean> {
+            override fun onSuccess(model: Boolean) {
+                list()
+            }
+            override fun onFailure(str: String) {
             }
         })
     }

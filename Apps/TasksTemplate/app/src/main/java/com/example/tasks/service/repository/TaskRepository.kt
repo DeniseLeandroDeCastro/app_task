@@ -4,7 +4,6 @@ import android.content.Context
 import com.example.tasks.R
 import com.example.tasks.service.constants.TaskConstants
 import com.example.tasks.service.listener.APIListener
-import com.example.tasks.service.model.HeaderModel
 import com.example.tasks.service.model.TaskModel
 import com.example.tasks.service.repository.remote.RetrofitClient
 import com.example.tasks.service.repository.remote.TaskService
@@ -34,10 +33,35 @@ class TaskRepository(val context: Context) {
 
     private fun list(call: Call<List<TaskModel>>, listener: APIListener<List<TaskModel>>) {
         call.enqueue(object: Callback<List<TaskModel>> {
+            override fun onFailure(call: Call<List<TaskModel>>, t: Throwable) {
+                listener.onFailure(context.getString(R.string.ERROR_UNEXPECTED))
+            }
             override fun onResponse(
                 call: Call<List<TaskModel>>,
                 response: Response<List<TaskModel>>
             ) {
+                if (response.code() != TaskConstants.HTTP.SUCCESS) {
+                    val validation = Gson().fromJson(response.errorBody()!!.string(), String::class.java)
+                    listener.onFailure(validation)
+                } else {
+                    response.body()?.let { listener.onSuccess(it) }
+                }
+            }
+        })
+    }
+
+    fun updateStatus(id: Int, complete: Boolean, listener: APIListener<Boolean>) {
+        var call = if (complete) {
+            mRemote.complete(id)
+        } else {
+            mRemote.undo(id)
+        }
+
+        call.enqueue(object: Callback<Boolean> {
+            override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                listener.onFailure(context.getString(R.string.ERROR_UNEXPECTED))
+            }
+            override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (response.code() != TaskConstants.HTTP.SUCCESS) {
                     val validation = Gson().fromJson(
                         response.errorBody()!!.string(), String::class.java)
@@ -45,10 +69,6 @@ class TaskRepository(val context: Context) {
                 } else {
                     response.body()?.let { listener.onSuccess(it) }
                 }
-            }
-
-            override fun onFailure(call: Call<List<TaskModel>>, t: Throwable) {
-                listener.onFailure(context.getString(R.string.ERROR_UNEXPECTED))
             }
         })
     }
@@ -72,6 +92,25 @@ class TaskRepository(val context: Context) {
         })
     }
 
+    fun update(task: TaskModel, listener: APIListener<Boolean>) {
+        val call: Call<Boolean> =
+            mRemote.update(task.id, task.priorityId, task.description, task.dueDate, task.complete)
+        call.enqueue(object: Callback<Boolean> {
+            override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                listener.onFailure(context.getString(R.string.ERROR_UNEXPECTED))
+            }
+            override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
+                if (response.code() != TaskConstants.HTTP.SUCCESS) {
+                    val validation = Gson().fromJson(
+                        response.errorBody()!!.string(), String::class.java)
+                    listener.onFailure(validation)
+                } else {
+                    response.body()?.let { listener.onSuccess(it) }
+                }
+            }
+        })
+    }
+
     fun load(id: Int, listener: APIListener<TaskModel>) {
         val call: Call<TaskModel> = mRemote.load(id)
         call.enqueue(object: Callback<TaskModel> {
@@ -79,6 +118,23 @@ class TaskRepository(val context: Context) {
                 listener.onFailure(context.getString(R.string.ERROR_UNEXPECTED))
             }
             override fun onResponse(call: Call<TaskModel>, response: Response<TaskModel>) {
+                if (response.code() != TaskConstants.HTTP.SUCCESS) {
+                    val validation = Gson().fromJson(response.errorBody()!!.string(), String::class.java)
+                    listener.onFailure(validation)
+                } else {
+                    response.body()?.let { listener.onSuccess(it) }
+                }
+            }
+        })
+    }
+
+    fun delete(id: Int, listener: APIListener<Boolean>) {
+        val call: Call<Boolean> = mRemote.delete(id)
+        call.enqueue(object: Callback<Boolean> {
+            override fun onFailure(call: Call<Boolean>, t: Throwable) {
+                listener.onFailure(context.getString(R.string.ERROR_UNEXPECTED))
+            }
+            override fun onResponse(call: Call<Boolean>, response: Response<Boolean>) {
                 if (response.code() != TaskConstants.HTTP.SUCCESS) {
                     val validation = Gson().fromJson(
                         response.errorBody()!!.string(), String::class.java)
