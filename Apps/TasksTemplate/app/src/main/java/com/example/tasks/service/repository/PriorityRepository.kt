@@ -1,6 +1,9 @@
 package com.example.tasks.service.repository
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import com.example.tasks.service.constants.TaskConstants
 import com.example.tasks.service.listener.APIListener
 import com.example.tasks.service.model.PriorityModel
@@ -11,12 +14,17 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class PriorityRepository(context: Context) {
+class PriorityRepository(val context: Context): BaseRepository(context) {
 
     private val mRemote = RetrofitClient.createService(PriorityService::class.java)
     private val mPriorityDatabase = TaskDatabase.getDatabase(context).priorityDAO()
 
     fun all(listener: APIListener<List<PriorityModel>>) {
+
+        if (!isConnectionAvailable(context)) {
+            return
+        }
+
         val call: Call<List<PriorityModel>> = mRemote.all()
         call.enqueue(object: Callback<List<PriorityModel>> {
             override fun onFailure(call: Call<List<PriorityModel>>, t: Throwable) {
