@@ -35,12 +35,22 @@ class TaskViewHolder(itemView: View, val listener: TaskListener) :
         val date = SimpleDateFormat("yyyy-MM-dd").parse(task.dueDate)
         this.mTextDueDate.text = mDateFormat.format(date)
 
-        if (task.complete) {
+        if (task.complete && mTextPriority.text == "Baixa") {
             mTextDescription.setTextColor(Color.GRAY)
-            mImageTask.setImageResource(R.drawable.ic_done)
+            mImageTask.setImageResource(R.drawable.ic_done_baixa)
+        } else if (task.complete && mTextPriority.text == "Média") {
+            mTextDescription.setTextColor(Color.GRAY)
+            mImageTask.setImageResource(R.drawable.ic_done_media)
+        } else if (task.complete && mTextPriority.text == "Alta") {
+            mTextPriority.setTextColor(Color.GRAY)
+            mImageTask.setImageResource(R.drawable.ic_done_alta)
+        } else if (task.complete && mTextPriority.text == "Crítica") {
+            mTextPriority.setTextColor(Color.GRAY)
+            mImageTask.setImageResource(R.drawable.ic_done_critica)
         } else {
-            mTextDescription.setTextColor(Color.BLACK)
             mImageTask.setImageResource(R.drawable.ic_todo)
+            mTextDescription.setTextColor(Color.BLACK)
+            mTextPriority.setTextColor(Color.BLACK)
         }
 
         // Eventos

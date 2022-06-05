@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:layout_marginTop="100dp"
     tools:context=".view.RegisterActivity">
 
     <EditText
@@ -54,8 +55,9 @@
         android:id="@+id/button_save"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:background="@drawable/bg_button_normal"
         android:layout_gravity="center_horizontal"
-        style="@style/DefaultButton"
+        android:textColor="@color/white"
         android:layout_marginBottom="16dp"
         android:text="@string/cadastrar"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -7,4 +7,8 @@
     <color name="colorGrayText">#c1c1c1</color>
     <color name="colorDescriptionTask">#535353</color>
     <color name="white">#ffffff</color>
+
+    <color name="taskComplete">#90EE90</color>
+    <color name="alta">@android:color/holo_red_dark</color>
+    <color name="black">#000000</color>
 </resources>
