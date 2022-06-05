@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.tasks.service.model.HeaderModel
 import com.example.tasks.service.constants.TaskConstants
+import com.example.tasks.service.helper.FingerPrintHelper
 import com.example.tasks.service.listener.APIListener
 import com.example.tasks.service.listener.ValidationListener
 import com.example.tasks.service.model.PriorityModel
@@ -23,12 +24,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val mLogin = MutableLiveData<ValidationListener>()
     var login: LiveData<ValidationListener> = mLogin
 
-    private val mLoggedUser = MutableLiveData<Boolean>()
-    var loggedUser: LiveData<Boolean> = mLoggedUser
+    private val mFingerPrint = MutableLiveData<Boolean>()
+    var fingerPrint: LiveData<Boolean> = mFingerPrint
 
-    /**
-     * Faz login usando API
-     */
     fun doLogin(email: String, password: String) {
         mPersonRepository.login(email, password, object: APIListener<HeaderModel> {
             override fun onSuccess(model: HeaderModel) {
@@ -48,20 +46,16 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         })
     }
 
-    /**
-     * Verifica se usuário está logado
-     */
-    fun verifyLoggedUser() {
+    fun isAuthenticationAvailable() {
         val token = mSharedPreferences.get(TaskConstants.SHARED.TOKEN_KEY)
         val person = mSharedPreferences.get(TaskConstants.SHARED.PERSON_KEY)
+        val everLogged = (token != "" && person != "")
 
         RetrofitClient.addHeader(token, person)
 
-        val logged = (token != "" && person != "")
-
-        if (!logged) {
+        if (!everLogged) {
             mPriorityRepository.all(object : APIListener<List<PriorityModel>> {
-                override fun onSuccess(model: List<PriorityModel>) {
+                override fun onSuccess(result: List<PriorityModel>) {
                     TODO("Not yet implemented")
                 }
 
@@ -70,6 +64,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 }
             })
         }
-        mLoggedUser.value = logged
+
+        if (FingerPrintHelper.isAuthenticationAvailable(getApplication())) {
+            mFingerPrint.value = everLogged
+        }
     }
 }
